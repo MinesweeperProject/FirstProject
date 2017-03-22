@@ -11,6 +11,8 @@ public class MyMouseAdapter extends MouseAdapter {
 	private Random generator = new Random();
 	public int [] posXBomb = new int [10];
 	public int [] posYBomb = new int [10];
+	public int [][] emptyCell = new int [10][10];
+	public int [][] minedCell = new int [10][10];
 	public Color bombs = Color.BLACK;
 	public Color uncoveredCell = Color.LIGHT_GRAY;
 	public Color coveredCell = Color.WHITE;
@@ -110,152 +112,75 @@ public class MyMouseAdapter extends MouseAdapter {
 				System.out.print(" ");
 				}
 			}
-			
-			if ((myPanel.mouseDownGridX == -1) || (myPanel.mouseDownGridY == -1)) {
-				//Had pressed outside
-				//Do nothing
-			} else {
-				if ((gridX == -1) || (gridY == -1)) {
-					//Is releasing outside
-					//Do nothing
-				} else {
-					if ((myPanel.mouseDownGridX != gridX) || (myPanel.mouseDownGridY != gridY)) {
-						//Released the mouse button on a different cell where it was pressed
-						//Do nothing
-					} else {
-						//Released the mouse button on the same cell where it was pressed
-						//On the left column and on the top row... do nothing
-						if ((gridX == 0) || (gridY == 0)) {
-							//Paint randomly the row of the right gray cell click it
-							if(gridX == 0 && gridY !=0 && gridY != 10){
-								for(int i = 1; i < 10; i++){
-									Color newColor = null;
-									do{
-									switch (generator.nextInt(5)) {
-									case 0:
-										newColor = Color.YELLOW;
-										break;
-									case 1:
-										newColor = Color.RED;
-										break;
-									case 2:
-										newColor = Color.BLUE;
-										break;
-									case 3:
-										newColor = new Color(0x964B00);   //Brown (from http://simple.wikipedia.org/wiki/List_of_colors)
-										break;
-									case 4:
-										newColor = new Color(0xB57EDC);   //Lavender (from http://simple.wikipedia.org/wiki/List_of_colors)
-										break;
-									}
-									}while(myPanel.colorArray[myPanel.mouseDownGridX + i][myPanel.mouseDownGridY].equals(newColor));
-									myPanel.colorArray[myPanel.mouseDownGridX + i][myPanel.mouseDownGridY] = newColor;
-									myPanel.repaint();
-								}
-								//Paint randomly the bottom column of the gray cell click it
-							}else if(gridY == 0 && gridX != 0){
-								for(int i = 1; i < 10; i++){
-									Color newColor = null;
-									do{
-									switch (generator.nextInt(5)) {
-									case 0:
-										newColor = Color.YELLOW;
-										break;
-									case 1:
-										newColor = Color.RED;
-										break;
-									case 2:
-										newColor = Color.BLUE;
-										break;
-									case 3:
-										newColor = new Color(0x964B00);   //Brown (from http://simple.wikipedia.org/wiki/List_of_colors)
-										break;
-									case 4:
-										newColor = new Color(0xB57EDC);   //Lavender (from http://simple.wikipedia.org/wiki/List_of_colors)
-										break;
-									}
-									}while(myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY + i].equals(newColor));
-									myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY + i] = newColor;
-									myPanel.repaint();
-								}
-								//Paint diagonal cells when click is on (0, 0)
-							}else if (gridX == 0 && gridY == 0){
-								for(int i = 1; i < 10; i++){
-									Color newColor = null;
-									do{
-									switch (generator.nextInt(5)) {
-									case 0:
-										newColor = Color.YELLOW;
-										break;
-									case 1:
-										newColor = Color.RED;
-										break;
-									case 2:
-										newColor = Color.BLUE;
-										break;
-									case 3:
-										newColor = new Color(0x964B00);   //Brown (from http://simple.wikipedia.org/wiki/List_of_colors)
-										break;
-									case 4:
-										newColor = new Color(0xB57EDC);   //Lavender (from http://simple.wikipedia.org/wiki/List_of_colors)
-										break;
-									}
-									}while(myPanel.colorArray[myPanel.mouseDownGridX+i][myPanel.mouseDownGridY+i].equals(newColor));
-									myPanel.colorArray[myPanel.mouseDownGridX + i][myPanel.mouseDownGridY + i] = newColor;
-									myPanel.repaint();
-								}
-								//Click on last left bottom cell to change center of grid (3x3)
-							}else if (gridX == 0 && gridY == 10){
-								for(int moveOnCol = 4; moveOnCol <=6; moveOnCol++){
-									for(int moveOnRow = 4; moveOnRow <= 6; moveOnRow++){
-										Color newColor = null;
-										do{
-										switch (generator.nextInt(5)) {
-										case 0:
-											newColor = Color.YELLOW;
-											break;
-										case 1:
-											newColor = Color.MAGENTA;
-											break;
-										case 2:
-											newColor = Color.BLACK;
-											break;
-										case 3:
-											newColor = new Color(0x964B00);   //Brown (from http://simple.wikipedia.org/wiki/List_of_colors)
-											break;
-										case 4:
-											newColor = new Color(0xB57EDC);   //Lavender (from http://simple.wikipedia.org/wiki/List_of_colors)
-											break;
-										}
-										}while(myPanel.colorArray[gridX + moveOnCol][gridY - moveOnRow].equals(newColor));
-										myPanel.colorArray[gridX + moveOnCol][gridY - moveOnRow] = newColor;
-										myPanel.repaint();
-									}
-								}				
+			//Array to mark cells with bombs. Bomb = 1
+			int posBomb = 0;
+			if(bomb == true){
+				for(int col = 1; col < 10; col++){
+					for(int row = 1; row < 10; row++){
+						do{
+							if(col == posXBomb[posBomb] && row == posYBomb[posBomb]){
+								minedCell[col][row] = 1;
 							}
-							}else {
-							//On the grid other than on the left column and on the top row:
-
-								for(int posArray = 0; posArray < posXBomb.length; posArray++){
-									for(int i = 1; i <= 1; i++){
-										if(myPanel.colorArray[gridX][gridY].equals(coveredCell)){
-											if(gridX == posXBomb[posArray] && gridY == posYBomb[posArray]){
-												myPanel.colorArray[gridX][gridY] = bombs;
-												myPanel.repaint();
-											}
-										}
-									}
+							posBomb++;
+						}while(posBomb < 10);
+						posBomb = 0;
+					}
+				}
+			}
+			
+			if (onGrid(myPanel, gridX, gridY)) {
+						//Released the mouse button on the same cell where it was pressed
+							//On the grid from (1,1) to (9,9)		
+				int moveOnGridX;
+				int moveOnGridY;
+				for(int col = -1; col <= 1; col++){
+					for(int row = -1; row <= 1; row++){
+						for(int i = 1; i <= 1; i++){
+							if(myPanel.colorArray[gridX][gridY].equals(coveredCell)){
+								
+								moveOnGridX = gridX + col;
+								moveOnGridY = gridY + row;
+								
+								if(minedCell[gridX][gridY] == 1){
+								myPanel.colorArray[gridX][gridY] = bombs;
+								myPanel.repaint();
+								}else if(minedCell[gridX][gridY] == 0){
+									
 								}
 								
-								if(myPanel.colorArray[gridX][gridY].equals(coveredCell)){
-									myPanel.colorArray[gridX][gridY] = uncoveredCell;
-									myPanel.repaint();
-								}
+								if(gridX == 9 && gridY != 9 && col < 1){
+									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+									}
+								}else if(gridX == 1 && gridY != 9 && col > -1){
+									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+									}
+								}else if(gridY == 9 && gridX != 9 && gridX != 1 && row < 1){
+									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+									}
+								}else if(gridY == 1 && gridX != 9 && row > -1){
+									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+									}
+								}else if(gridX == 1 && gridY == 9 && col > -1 && row < 1){
+									
+								}else if(gridX == 9 && gridY == 1 && col < 1 && row > -1){
+									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+									}
+								}else if(gridX == 9 && gridY == 9 && col < 1 && row < 1){
+									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+									}
+								}else if(gridX != 9 && gridX != 1 && gridY != 9 && gridY != 1){
+									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+									}
 								}
 							}
 						}
 					}
-			//gridX != posXBomb[posArray] && gridY != posYBomb[posArray]
+				}
+				if(minedCell[gridX][gridY] == 0){
+					myPanel.colorArray[gridX][gridY] = uncoveredCell;
+					myPanel.repaint();
+				}
+			}
 			break;
 		case 3:		//Right mouse button
 			//Use of Flag
@@ -307,7 +232,42 @@ public class MyMouseAdapter extends MouseAdapter {
 			break;
 		}
 	}
+
+
+public boolean onGrid(MyPanel myPanel, int gridX, int gridY){
+	if ((myPanel.mouseDownGridX != -1) && (myPanel.mouseDownGridY != -1)) {
+		if ((gridX != -1) && (gridY != -1)) {
+			if ((myPanel.mouseDownGridX == gridX) && (myPanel.mouseDownGridY == gridY)) {
+				return true;
+			} 
+		}
+	} 
+	return false;
+	}
+
+public boolean checkNeighbors(MyPanel myPanel, int gridX, int gridY, int moveOnGridX, int moveOnGridY){
+	if(minedCell[moveOnGridX][moveOnGridY] == 1 || myPanel.colorArray[moveOnGridX][moveOnGridY].equals(bombs)){
+		
+	}else if(moveOnGridX == gridX && moveOnGridY == gridY){
+		
+	}else if (minedCell[moveOnGridX][moveOnGridY] == 0 && myPanel.colorArray[moveOnGridX][moveOnGridY] == Color.RED){
+		
+	}else if(minedCell[moveOnGridX][moveOnGridY] == 0){
+		myPanel.colorArray[moveOnGridX][moveOnGridY] = uncoveredCell;
+		myPanel.repaint();
+	}
+	return true;
 }
 
+}
 
-	
+//if(minedCell[moveOnGridX][moveOnGridY] == 1 || myPanel.colorArray[moveOnGridX][moveOnGridY].equals(bombs)){
+//
+//}else if(moveOnGridX == gridX && moveOnGridY == gridY){
+//
+//}else if (minedCell[moveOnGridX][moveOnGridY] == 0 && myPanel.colorArray[moveOnGridX][moveOnGridY] == Color.RED){
+//
+//}else if(minedCell[moveOnGridX][moveOnGridY] == 0){
+//myPanel.colorArray[moveOnGridX][moveOnGridY] = uncoveredCell;
+//myPanel.repaint();
+//}
