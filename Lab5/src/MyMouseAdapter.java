@@ -6,18 +6,21 @@ import java.awt.event.MouseEvent;
 import java.util.Random;
 
 import javax.swing.JFrame;
-
+import javax.swing.JOptionPane;
 public class MyMouseAdapter extends MouseAdapter {
 	private Random generator = new Random();
 	public int [] posXBomb = new int [10];
 	public int [] posYBomb = new int [10];
-	public int [][] emptyCell = new int [10][10];
 	public int [][] minedCell = new int [10][10];
 	public Color bombs = Color.BLACK;
 	public Color uncoveredCell = Color.LIGHT_GRAY;
 	public Color coveredCell = Color.WHITE;
 	public boolean bomb = false;
+	public boolean check = false;
 	public int useFlag = 1;
+	public int [][] bombsAround = new int [81][81];
+	
+	//public boolean GameOver = false;
 	
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
@@ -94,45 +97,85 @@ public class MyMouseAdapter extends MouseAdapter {
 			int gridX = myPanel.getGridX(x, y);
 			int gridY = myPanel.getGridY(x, y);
 			
-			int quantityCol;
-			int quantityRow;
+			int quantityCol = 0;
+			int quantityRow = 0;
 			
-			//Create bombs coordinates (BUG: can have similar coordinate. FIX!!!!!)
-			if(bomb == false){
-			for(int i = 1; i <= posXBomb.length; i++){
-				do{
-					quantityCol = generator.nextInt(10);
-					quantityRow = generator.nextInt(10);
-				}while(quantityCol == 0 || quantityRow == 0 || myPanel.colorArray[quantityCol][quantityRow].equals(bombs));
-				posXBomb[i - 1] = quantityCol;
-				posYBomb[i - 1] = quantityRow;
-				bomb = true;
-				System.out.print(posXBomb[i-1] + "");
-				System.out.print(posYBomb[i-1]);
-				System.out.print(" ");
-				}
-			}
-			//Array to mark cells with bombs. Bomb = 1
-			int posBomb = 0;
-			if(bomb == true){
-				for(int col = 1; col < 10; col++){
-					for(int row = 1; row < 10; row++){
-						do{
-							if(col == posXBomb[posBomb] && row == posYBomb[posBomb]){
-								minedCell[col][row] = 1;
-							}
-							posBomb++;
-						}while(posBomb < 10);
-						posBomb = 0;
-					}
-				}
-			}
-			
+			//METHOD: Create bombs coordinates (BUG: can have similar coordinate. FIX!!!!!)
+			createMines(myPanel, quantityCol, quantityRow);
+			//METHOD: Array to mark cells with bombs. Bomb = 1
+			markMines(myPanel);
+			//METHOD: How many mines around each cell
+			minesAroundCells(myPanel, gridX, gridY);
+			//METHOD: Is on grid?
 			if (onGrid(myPanel, gridX, gridY)) {
-						//Released the mouse button on the same cell where it was pressed
-							//On the grid from (1,1) to (9,9)		
+				//Released the mouse button on the same cell where it was pressed
+				//On the grid from (1,1) to (9,9)	
+				
+				//int moveOnGridX1;
+				//int moveOnGridY1;
 				int moveOnGridX;
 				int moveOnGridY;
+				int count = -1;
+				int countBombs = 0;
+				boolean mines = false;
+				do{
+					
+					for(int col = -1; col <= 1; col++){
+						for(int row = -1; row <= 1; row++){
+							if(myPanel.colorArray[gridX][gridY].equals(coveredCell)){
+								if(minedCell[gridX][gridY] == 0){
+									moveOnGridX = gridX + col;
+									moveOnGridY = gridY + row;
+									
+									if(gridX == 9 && gridY != 9 && col < 1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}else if(gridX == 1 && gridY != 9 && col > -1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}else if(gridY == 9 && gridX != 9 && gridX != 1 && row < 1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}else if(gridY == 1 && gridX != 9 && row > -1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}else if(gridX == 1 && gridY == 9 && col > -1 && row < 1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}else if(gridX == 9 && gridY == 1 && col < 1 && row > -1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}else if(gridX == 9 && gridY == 9 && col < 1 && row < 1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}else if(gridX != 9 && gridX != 1 && gridY != 9 && gridY != 1){
+										if(minedCell[moveOnGridX][moveOnGridY] == 1){
+											mines = true;
+											countBombs = countBombs +1;
+										}
+									}
+								}
+							}
+						}
+					count = count + 1;
+					}
+					System.out.print(countBombs);
+				}while(count < 2);
+
 				for(int col = -1; col <= 1; col++){
 					for(int row = -1; row <= 1; row++){
 						for(int i = 1; i <= 1; i++){
@@ -144,41 +187,40 @@ public class MyMouseAdapter extends MouseAdapter {
 								if(minedCell[gridX][gridY] == 1){
 								myPanel.colorArray[gridX][gridY] = bombs;
 								myPanel.repaint();
-								}else if(minedCell[gridX][gridY] == 0){
 									
-								}
+								//GameOver = true;
+								//Object[] options = {"Yes","No, thanks"};
+								//JOptionPane.showOptionDialog(myFrame,"      Want to PLAY AGAIN??","BOOM! YOU LOST!",JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[1]);
 								
-								if(gridX == 9 && gridY != 9 && col < 1){
-									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
-									}
-								}else if(gridX == 1 && gridY != 9 && col > -1){
-									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
-									}
-								}else if(gridY == 9 && gridX != 9 && gridX != 1 && row < 1){
-									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
-									}
-								}else if(gridY == 1 && gridX != 9 && row > -1){
-									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
-									}
-								}else if(gridX == 1 && gridY == 9 && col > -1 && row < 1){
-									
-								}else if(gridX == 9 && gridY == 1 && col < 1 && row > -1){
-									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
-									}
-								}else if(gridX == 9 && gridY == 9 && col < 1 && row < 1){
-									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
-									}
-								}else if(gridX != 9 && gridX != 1 && gridY != 9 && gridY != 1){
-									if(checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY)){
+								}else if(minedCell[gridX][gridY] == 0 && mines == false){
+									if(gridX == 9 && gridY != 9 && col < 1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
+									}else if(gridX == 1 && gridY != 9 && col > -1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
+									}else if(gridY == 9 && gridX != 9 && gridX != 1 && row < 1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
+									}else if(gridY == 1 && gridX != 9 && row > -1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
+									}else if(gridX == 1 && gridY == 9 && col > -1 && row < 1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
+									}else if(gridX == 9 && gridY == 1 && col < 1 && row > -1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
+									}else if(gridX == 9 && gridY == 9 && gridX != 1 && col < 1 && row < 1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
+										
+									}else if(gridX != 9 && gridX != 1 && gridY != 9 && gridY != 1){
+										checkNeighbors(myPanel, gridX, gridY, moveOnGridX, moveOnGridY);
 									}
 								}
 							}
 						}
 					}
 				}
-				if(minedCell[gridX][gridY] == 0){
+				if(minedCell[gridX][gridY] == 0 && myPanel.colorArray[gridX][gridY] == Color.RED){
+					
+				}else if(minedCell[gridX][gridY] == 0){
 					myPanel.colorArray[gridX][gridY] = uncoveredCell;
-					myPanel.repaint();
+					myPanel.repaint();					
 				}
 			}
 			break;
@@ -225,14 +267,12 @@ public class MyMouseAdapter extends MouseAdapter {
 					useFlag = 2;
 				}
 			}
-			
 			break;
 		default:    //Some other button (2 = Middle mouse button, etc.)
 			//Do nothing
 			break;
 		}
 	}
-
 
 public boolean onGrid(MyPanel myPanel, int gridX, int gridY){
 	if ((myPanel.mouseDownGridX != -1) && (myPanel.mouseDownGridY != -1)) {
@@ -245,7 +285,8 @@ public boolean onGrid(MyPanel myPanel, int gridX, int gridY){
 	return false;
 	}
 
-public boolean checkNeighbors(MyPanel myPanel, int gridX, int gridY, int moveOnGridX, int moveOnGridY){
+public void checkNeighbors(MyPanel myPanel, int gridX, int gridY, int moveOnGridX, int moveOnGridY){
+	
 	if(minedCell[moveOnGridX][moveOnGridY] == 1 || myPanel.colorArray[moveOnGridX][moveOnGridY].equals(bombs)){
 		
 	}else if(moveOnGridX == gridX && moveOnGridY == gridY){
@@ -256,18 +297,157 @@ public boolean checkNeighbors(MyPanel myPanel, int gridX, int gridY, int moveOnG
 		myPanel.colorArray[moveOnGridX][moveOnGridY] = uncoveredCell;
 		myPanel.repaint();
 	}
-	return true;
+	
 }
 
+public void minesAroundCells(MyPanel myPanel, int gridX, int gridY){
+	int countBomb = 0;
+	if(check == false){
+	int countCells = 1;
+	do{
+		int moveOnGridX;
+		int moveOnGridY;
+		
+		for(int allGridX = 1; allGridX < 10; allGridX++){
+			for(int allGridY = 1; allGridY < 10; allGridY++){
+				for(int col = -1; col <= 1; col++){
+					for(int row = -1; row <= 1; row++){
+						if(myPanel.colorArray[allGridX][allGridY].equals(coveredCell)){
+							if(minedCell[allGridX][allGridY] == 1){
+								countBomb = 9;
+							}else if(minedCell[allGridX][allGridY] == 0){
+								moveOnGridX = allGridX + col;
+								moveOnGridY = allGridY + row;
+								//Corner(1,1)
+								if(allGridX == 1 && allGridY == 1 && col > -1 && row > -1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Left side
+								}else if(allGridX == 1 && allGridY != 9 && col > -1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Bottom side
+								}else if(allGridY == 9 && allGridX != 9 && allGridX != 1 && row < 1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Up side
+								}else if(allGridY == 1 && allGridX != 9 && allGridX != 1 && row > -1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Corner(1,9)
+								}else if(allGridX == 1 && allGridY == 9 && col > -1 && row < 1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Corner(9,1)
+								}else if(allGridX == 9 && allGridY == 1 && col < 1 && row > -1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Corner(9,9)
+								}else if(allGridX == 9 && allGridY == 9 && col < 1 && row < 1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Right side
+								}else if(allGridX == 9 && allGridY != 1 && allGridY != 9 && col < 1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								//Rest of Grid
+								}else if(allGridX != 9 && allGridX != 1 && allGridY != 9 && allGridY != 1){
+									if(minedCell[moveOnGridX][moveOnGridY] == 1){
+										countBomb = countBomb + 1;
+									}
+								}
+							}
+						}
+					}
+				}
+				bombsAround [allGridX][allGridY] = countBomb;
+				System.out.print(bombsAround[allGridX][allGridY]);
+				countBomb = 0;
+			}
+			countCells = countCells + 1;
+		}
+		check = true;
+	}while(countCells < 10);
+	}
 }
 
-//if(minedCell[moveOnGridX][moveOnGridY] == 1 || myPanel.colorArray[moveOnGridX][moveOnGridY].equals(bombs)){
-//
-//}else if(moveOnGridX == gridX && moveOnGridY == gridY){
-//
-//}else if (minedCell[moveOnGridX][moveOnGridY] == 0 && myPanel.colorArray[moveOnGridX][moveOnGridY] == Color.RED){
-//
-//}else if(minedCell[moveOnGridX][moveOnGridY] == 0){
-//myPanel.colorArray[moveOnGridX][moveOnGridY] = uncoveredCell;
-//myPanel.repaint();
+public void markMines(MyPanel myPanel){
+	int posBomb = 0;
+	if(bomb == true){
+		for(int col = 1; col < 10; col++){
+			for(int row = 1; row < 10; row++){
+				do{
+					if(col == posXBomb[posBomb] && row == posYBomb[posBomb]){
+						minedCell[col][row] = 1;
+					}
+					posBomb++;
+				}while(posBomb < 10);
+				posBomb = 0;
+			}
+		}
+	}
+}
+
+public void createMines(MyPanel myPanel, int quantityCol, int quantityRow){
+	if(bomb == false){
+		for(int i = 1; i <= posXBomb.length; i++){
+			do{
+				quantityCol = generator.nextInt(10);
+				quantityRow = generator.nextInt(10);
+			}while(quantityCol == 0 || quantityRow == 0 || myPanel.colorArray[quantityCol][quantityRow].equals(bombs));
+			posXBomb[i - 1] = quantityCol;
+			posYBomb[i - 1] = quantityRow;
+			bomb = true;
+			System.out.print(posXBomb[i-1] + "");
+			System.out.print(posYBomb[i-1]);
+			System.out.print(" ");
+			}
+		}
+}
+//MAYBE TO FLIP ALL CELLS
+//if(minedCell[gridX][gridY] == 1 && myPanel.colorArray[gridX][gridY].equals(coveredCell)){
+//for(int colX = 1; colX < 10; colX++){
+//	for(int rowY = 1; rowY < 10; rowY++){
+//			if(minedCell[colX][rowY] == 1 && myPanel.colorArray[colX][rowY].equals(coveredCell)){
+//				myPanel.colorArray[colX][rowY].equals(bombs);
+//				myPanel.repaint();
+//			}else if(minedCell[colX][rowY] == 1 && myPanel.colorArray[colX][rowY].equals(bombs)){
+//				
+//			}else if(minedCell[colX][rowY] == 0 && myPanel.colorArray[colX][rowY].equals(coveredCell)){
+//				myPanel.colorArray[colX][rowY].equals(uncoveredCell);
+//				myPanel.repaint();
+//			}else if(minedCell[colX][rowY] == 0 && myPanel.colorArray[colX][rowY].equals(uncoveredCell)){
+//				
+//			}
+//		
+//	}
 //}
+//}	
+
+//CHECK THE CELLS AROUND IF IS CERO
+//else if(minedCell[moveOnGridX][moveOnGridY] == 0 && mines == false && bombsAround [moveOnGridX][moveOnGridY] == 0){
+//	moveOnGridX1 = moveOnGridX + col;
+//	moveOnGridY1 = moveOnGridY + row;
+//	
+//	if(moveOnGridX != 9 && moveOnGridX != 1 && moveOnGridY != 9 && moveOnGridY != 1){
+//		if(minedCell[moveOnGridX1][moveOnGridY1] == 1 || myPanel.colorArray[moveOnGridX1][moveOnGridY1].equals(bombs)){
+//			
+//		}else if(moveOnGridX1 == moveOnGridX && moveOnGridY1 == moveOnGridY){
+//			
+//		}else if (minedCell[moveOnGridX1][moveOnGridY1] == 0 && myPanel.colorArray[moveOnGridX1][moveOnGridY1] == Color.RED){
+//			
+//		}else if(minedCell[moveOnGridX1][moveOnGridY1] == 0){
+//			myPanel.colorArray[moveOnGridX1][moveOnGridY1] = uncoveredCell;
+//			myPanel.repaint();
+//		}
+//	}
+//}
+}
