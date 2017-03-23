@@ -20,8 +20,6 @@ public class MyMouseAdapter extends MouseAdapter {
 	public int useFlag = 1;
 	public int [][] bombsAround = new int [81][81];
 	
-	//public boolean GameOver = false;
-	
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
 		case 1:		//Left mouse button
@@ -111,8 +109,6 @@ public class MyMouseAdapter extends MouseAdapter {
 				//Released the mouse button on the same cell where it was pressed
 				//On the grid from (1,1) to (9,9)	
 				
-				//int moveOnGridX1;
-				//int moveOnGridY1;
 				int moveOnGridX;
 				int moveOnGridY;
 				int count = -1;
@@ -187,10 +183,6 @@ public class MyMouseAdapter extends MouseAdapter {
 								if(minedCell[gridX][gridY] == 1){
 								myPanel.colorArray[gridX][gridY] = bombs;
 								myPanel.repaint();
-									
-								//GameOver = true;
-								//Object[] options = {"Yes","No, thanks"};
-								//JOptionPane.showOptionDialog(myFrame,"      Want to PLAY AGAIN??","BOOM! YOU LOST!",JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[1]);
 								
 								}else if(minedCell[gridX][gridY] == 0 && mines == false){
 									if(gridX == 9 && gridY != 9 && col < 1){
@@ -412,42 +404,4 @@ public void createMines(MyPanel myPanel, int quantityCol, int quantityRow){
 			}
 		}
 }
-//MAYBE TO FLIP ALL CELLS
-//if(minedCell[gridX][gridY] == 1 && myPanel.colorArray[gridX][gridY].equals(coveredCell)){
-//for(int colX = 1; colX < 10; colX++){
-//	for(int rowY = 1; rowY < 10; rowY++){
-//			if(minedCell[colX][rowY] == 1 && myPanel.colorArray[colX][rowY].equals(coveredCell)){
-//				myPanel.colorArray[colX][rowY].equals(bombs);
-//				myPanel.repaint();
-//			}else if(minedCell[colX][rowY] == 1 && myPanel.colorArray[colX][rowY].equals(bombs)){
-//				
-//			}else if(minedCell[colX][rowY] == 0 && myPanel.colorArray[colX][rowY].equals(coveredCell)){
-//				myPanel.colorArray[colX][rowY].equals(uncoveredCell);
-//				myPanel.repaint();
-//			}else if(minedCell[colX][rowY] == 0 && myPanel.colorArray[colX][rowY].equals(uncoveredCell)){
-//				
-//			}
-//		
-//	}
-//}
-//}	
-
-//CHECK THE CELLS AROUND IF IS CERO
-//else if(minedCell[moveOnGridX][moveOnGridY] == 0 && mines == false && bombsAround [moveOnGridX][moveOnGridY] == 0){
-//	moveOnGridX1 = moveOnGridX + col;
-//	moveOnGridY1 = moveOnGridY + row;
-//	
-//	if(moveOnGridX != 9 && moveOnGridX != 1 && moveOnGridY != 9 && moveOnGridY != 1){
-//		if(minedCell[moveOnGridX1][moveOnGridY1] == 1 || myPanel.colorArray[moveOnGridX1][moveOnGridY1].equals(bombs)){
-//			
-//		}else if(moveOnGridX1 == moveOnGridX && moveOnGridY1 == moveOnGridY){
-//			
-//		}else if (minedCell[moveOnGridX1][moveOnGridY1] == 0 && myPanel.colorArray[moveOnGridX1][moveOnGridY1] == Color.RED){
-//			
-//		}else if(minedCell[moveOnGridX1][moveOnGridY1] == 0){
-//			myPanel.colorArray[moveOnGridX1][moveOnGridY1] = uncoveredCell;
-//			myPanel.repaint();
-//		}
-//	}
-//}
 }
