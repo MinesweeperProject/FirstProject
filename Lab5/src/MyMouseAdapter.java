@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Insets;
+import java.awt.Label;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,6 +13,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	private Random generator = new Random();
 	public int [] posXBomb = new int [10];
 	public int [] posYBomb = new int [10];
+	
 	public Point [][] BombsLoc = new Point [10][10];
 	public Color bombs = Color.BLACK;
 	public Color uncoveredCell = Color.LIGHT_GRAY;
@@ -19,7 +21,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	public boolean bomb = false;
 	public int useFlag = 1;
 	public boolean hasBomb = false;
-	int QuantityOfBombsAround = 0;
+	
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
 		case 1:		//Left mouse button
@@ -72,6 +74,19 @@ public class MyMouseAdapter extends MouseAdapter {
 			break;
 		}
 	}
+	public void CreatesLabelOnGrid(MyPanel myPanelB, Point Loc, int Number) {
+		int xLoc = myPanelB.mouseDownGridX;
+		int yLoc = myPanelB.mouseDownGridY;
+	     Label l = new Label();
+	     l.setText(String.valueOf(Number));
+	     l.setSize(29, 29);
+	     l.setLocation(xLoc, yLoc);
+	     l.setVisible(true);
+	     myPanelB.add(l);
+	     }
+
+   
+	// change to type boolean and add a variable of quanntity of bombs.
 	public int BombsAround(MouseEvent e,int ClickedInX,int ClickedInY){
 		Component e2 = e.getComponent();
 		JFrame myFrameB = (JFrame)e2;
@@ -86,18 +101,245 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.y = y;
 		int gridX = myPanelB.getGridX(x, y);
 		int gridY = myPanelB.getGridY(x, y);
-		int centerx = ClickedInX;
-		int centery = ClickedInY;
-		int newGridX = ClickedInX - 1;
-		int newGridY = ClickedInY -1;
+		int newGridX ;
+		int newGridY;
+		int QuantityOfBombsAround = 0;
+		int transition = 0;
 		//FIXX	!!!!
-		//If X=0 and Y =0
+		//If Bottom Left Corner
+		if(ClickedInX == 1 && ClickedInY == 9 ){
+			 newGridX = ClickedInX ;
+			 newGridY = ClickedInY - 1;
+			for(int Col = 0;Col < 2; Col++){
+			
+			for(int Row = 0; Row < 2; Row++){
+				if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
+					System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+					Row++;
+					
+				}
+				if( HasBomb(e,newGridX + Col, newGridY + Row ) == true){
+					myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
+					QuantityOfBombsAround++;
+				}
+				else{
+				myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
+				System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+				myPanelB.repaint();
+				
+			}
+			
+		}
 		
 		
-		System.out.println(QuantityOfBombsAround);
+		System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
+		
+		
+		
+		}
+		}
+		//If Bottom Right Corner
+		else if(ClickedInX == 9 && ClickedInY == 9 ){
+					 newGridX = ClickedInX - 1;
+					 newGridY = ClickedInY - 1;
+					for(int Col = 0;Col < 2; Col++){
+					
+					for(int Row = 0; Row < 2; Row++){
+						if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
+							System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+							Row++;
+							
+						}
+						if( HasBomb(e,newGridX + Col, newGridY + Row ) == true){
+							myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
+							QuantityOfBombsAround++;
+						}
+						else{
+						myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
+						System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+						myPanelB.repaint();
+						
+					}
+					
+				}
+				
+				
+				System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
+				
+				}
+				}
+		//If Top Right Corner
+				else if(ClickedInX == 9 && ClickedInY == 1 ){
+							 newGridX = ClickedInX - 1;
+							 newGridY = ClickedInY;
+							for(int Col = 0;Col < 2; Col++){
+							
+							for(int Row = 0; Row < 2; Row++){
+								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
+									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+									Row++;
+									
+								}
+								if( HasBomb(e,newGridX + Col, newGridY + Row ) == true){
+									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
+									QuantityOfBombsAround++;
+								}
+								else{
+								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
+								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+								myPanelB.repaint();
+								
+							}
+							
+						}
+						
+						
+						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
+						
+						}
+						}
+		//If Top Left Corner
+				else if(ClickedInX == 1 && ClickedInY == 1 ){
+							 newGridX = ClickedInX;
+							 newGridY = ClickedInY;
+							for(int Col = 0;Col < 2; Col++){
+							
+							for(int Row = 0; Row < 2; Row++){
+								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
+									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+									Row++;
+									
+								}
+								if( HasBomb(e,newGridX + Col, newGridY + Row ) == true){
+									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
+									QuantityOfBombsAround++;
+								}
+								else{
+								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
+								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+								myPanelB.repaint();
+								
+							}
+							
+						}
+						
+						
+						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
+						
+						}
+						}
+		//If first column
+				else if(ClickedInX == 1){
+							 newGridX = ClickedInX;
+							 newGridY = ClickedInY -1;
+							for(int Col = 0;Col < 2; Col++){
+							
+							for(int Row = 0; Row < 3; Row++){
+								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
+									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+									Row++;
+									
+								}
+								if( HasBomb(e,newGridX + Col, newGridY + Row ) == true){
+									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
+									QuantityOfBombsAround++;
+								}
+								else{
+								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
+								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+								myPanelB.repaint();
+								
+							}
+							
+						}
+						
+						
+						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
+						
+						}
+						}
+		//If last column
+				else if(ClickedInX == 9 ){
+							 newGridX = ClickedInX - 1;
+							 newGridY = ClickedInY - 1;
+							for(int Col = 0;Col < 2; Col++){
+							
+							for(int Row = 0; Row < 3; Row++){
+								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
+									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+									Row++;
+									
+								}
+								if( HasBomb(e,newGridX + Col, newGridY + Row ) == true){
+									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
+									QuantityOfBombsAround++;
+								}
+								else{
+								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
+								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+								myPanelB.repaint();
+								
+							}
+							
+						}
+						
+						
+						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
+						
+						}
+						}
+		//else on grid
+				else{
+							 newGridX = ClickedInX - 1;
+							 newGridY = ClickedInY - 1;
+							for(int Col = 0;Col < 3; Col++){
+							
+							for(int Row = 0; Row < 3; Row++){
+								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
+									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+									Row++;
+									
+								}
+								if( HasBomb(e,newGridX + Col, newGridY + Row ) == true){
+									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
+									QuantityOfBombsAround++;
+								}
+								else{
+								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
+								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
+								myPanelB.repaint();
+								
+							}
+							
+						}
+						
+						
+						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
+						
+						}
+						}
 		return QuantityOfBombsAround;
+		
+		
 	}
-	
+	public void GameOver(MouseEvent e,int ClickedInX, int ClickedInY){
+		Component e2 = e.getComponent();
+		JFrame myFrameB = (JFrame)e2;
+		MyPanel myPanelB = (MyPanel) myFrameB.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
+		Insets myInsetsB = myFrameB.getInsets();
+		int x1 = myInsetsB.left;
+		int y1 = myInsetsB.top;
+		e.translatePoint(-x1, -y1);
+		int x = e.getX();
+		int y = e.getY();
+		myPanelB.x = x;
+		myPanelB.y = y;
+		if(HasBomb(e,ClickedInX,ClickedInY)){
+			for( int posArray = 0; posArray < posXBomb.length;posArray++){
+				myPanelB.colorArray[posXBomb[posArray]][posYBomb[posArray]] = bombs;
+			}
+		}
+	}
 	public boolean HasBomb(MouseEvent e, int ClickedInX,int ClickedInY){
 		Component e2 = e.getComponent();
 		JFrame myFrameB = (JFrame)e2;
@@ -152,25 +394,11 @@ public class MyMouseAdapter extends MouseAdapter {
 			int gridX = myPanel.getGridX(x, y);
 			int gridY = myPanel.getGridY(x, y);
 			
-			int quantityCol;
-			int quantityRow;
+			int quantityCol = 0;
+			int quantityRow = 0;
 			
 			//Create bombs coordinates (BUG: can have similar coordinate. FIX!!!!!)
-			if(bomb == false){
-			for(int i = 1; i <= posXBomb.length; i++){
-				do{
-					quantityCol = generator.nextInt(10);
-					quantityRow = generator.nextInt(10);
-				}while(quantityCol == 0 || quantityRow == 0 || myPanel.colorArray[quantityCol][quantityRow].equals(bombs));
-				posXBomb[i - 1] = quantityCol;
-				posYBomb[i - 1] = quantityRow;
-				//BombsLoc [i - 1][i - 1] = [ quantityCol] [ quantityRow];
-				bomb = true;
-				System.out.print(posXBomb[i-1] + "");
-				System.out.print(posYBomb[i-1]);
-				System.out.print(" ");
-				}
-			}
+			createMines(myPanel, quantityCol, quantityRow);
 			
 			if ((myPanel.mouseDownGridX == -1) || (myPanel.mouseDownGridY == -1)) {
 				//Had pressed outside
@@ -298,6 +526,9 @@ public class MyMouseAdapter extends MouseAdapter {
 							//On the grid other than on the left column and on the top row:
                                HasBomb(e,gridX,gridY);
                                BombsAround(e,gridX,gridY);
+                               GameOver(e,gridX,gridY);
+                              
+                               
 //								for(int posArray = 0; posArray < posXBomb.length; posArray++){
 //									
 //									
@@ -385,6 +616,22 @@ public class MyMouseAdapter extends MouseAdapter {
 			//Do nothing
 			break;
 		}
+	}
+	public void createMines(MyPanel myPanel, int quantityCol, int quantityRow){
+		if(bomb == false){
+			for(int i = 1; i <= posXBomb.length; i++){
+				do{
+					quantityCol = generator.nextInt(10);
+					quantityRow = generator.nextInt(10);
+				}while(quantityCol == 0 || quantityRow == 0 || myPanel.colorArray[quantityCol][quantityRow].equals(bombs));
+				posXBomb[i - 1] = quantityCol;
+				posYBomb[i - 1] = quantityRow;
+				bomb = true;
+				System.out.print(posXBomb[i-1] + "");
+				System.out.print(posYBomb[i-1]);
+				System.out.print(" ");
+				}
+			}
 	}
 }
 

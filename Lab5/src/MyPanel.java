@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Label;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -39,6 +40,7 @@ public class MyPanel extends JPanel {
 			}
 		}
 	}
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -129,4 +131,7 @@ public class MyPanel extends JPanel {
 		}
 		return y;
 	}
+	
+	
+	
 }
