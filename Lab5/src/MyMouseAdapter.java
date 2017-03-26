@@ -75,19 +75,17 @@ public class MyMouseAdapter extends MouseAdapter {
 			break;
 		}
 	}
-	public void CreatesLabelOnGrid(MyPanel myPanelB, Point Loc, int Number) {
-		int xLoc = myPanelB.mouseDownGridX;
-		int yLoc = myPanelB.mouseDownGridY;
-	     Label l = new Label();
-	     l.setText(String.valueOf(Number));
-	     l.setSize(29, 29);
-	     l.setLocation(xLoc, yLoc);
-	     l.setVisible(true);
-	     myPanelB.add(l);
-	     }
+	
+	
 
    
-	// change to type boolean and add a variable of quanntity of bombs.
+	/**
+	 * BombsAround: Check if there is any bomb around Clicked Cell, if there is one it will return hasBombAround = TRUE
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 * @return
+	 */
 	public boolean BombsAround(MyPanel myPanelB,int ClickedInX,int ClickedInY){
 		int newGridX ;
 		int newGridY;
@@ -299,230 +297,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		
 		
 	}
-//public void MarkAround(MyPanel myPanelB,int ClickedInX,int ClickedInY){
-//		
-//		int newGridX ;
-//		int newGridY;
-//		int QuantityOfBombsAround = 0;
-//		
-//		
-//		//FIXX	!!!!
-//		//If Bottom Left Corner
-//		if(ClickedInX == 1 && ClickedInY == 9 ){
-//			
-//			 newGridX = ClickedInX ;
-//			 newGridY = ClickedInY - 1;
-//			for(int Col = 0;Col < 2; Col++){
-//			
-//			for(int Row = 0; Row < 2; Row++){
-//				if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
-//					System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//					Row++;
-//					
-//				}
-//				if( HasBomb(myPanelB,newGridX + Col, newGridY + Row ) == true){
-//					myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
-//					
-//					QuantityOfBombsAround++;
-//				}
-//				else{
-//				myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
-//				System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//				myPanelB.repaint();
-//				
-//			}
-//				
-//			
-//		}
-//		
-//		
-//		System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
-//		
-//		
-//		
-//		}
-//		}
-//		//If Bottom Right Corner
-//		else if(ClickedInX == 9 && ClickedInY == 9 ){
-//					 newGridX = ClickedInX - 1;
-//					 newGridY = ClickedInY - 1;
-//					for(int Col = 0;Col < 2; Col++){
-//					
-//					for(int Row = 0; Row < 2; Row++){
-//						if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
-//							System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//							Row++;
-//							
-//						}
-//						if( HasBomb(myPanelB,newGridX + Col, newGridY + Row ) == true){
-//							myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
-//							QuantityOfBombsAround++;
-//						}
-//						else{
-//						myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
-//						System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//						myPanelB.repaint();
-//						
-//					}
-//					
-//				}
-//				
-//				
-//				System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
-//				
-//				}
-//				}
-//		//If Top Right Corner
-//				else if(ClickedInX == 9 && ClickedInY == 1 ){
-//							 newGridX = ClickedInX - 1;
-//							 newGridY = ClickedInY;
-//							for(int Col = 0;Col < 2; Col++){
-//							
-//							for(int Row = 0; Row < 2; Row++){
-//								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
-//									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//									Row++;
-//									
-//								}
-//								if( HasBomb(myPanelB,newGridX + Col, newGridY + Row ) == true){
-//									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
-//									QuantityOfBombsAround++;
-//								}
-//								else{
-//								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
-//								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//								myPanelB.repaint();
-//								
-//							}
-//							
-//						}
-//						
-//						
-//						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
-//						
-//						}
-//						}
-//		//If Top Left Corner
-//				else if(ClickedInX == 1 && ClickedInY == 1 ){
-//							 newGridX = ClickedInX;
-//							 newGridY = ClickedInY;
-//							for(int Col = 0;Col < 2; Col++){
-//							
-//							for(int Row = 0; Row < 2; Row++){
-//								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
-//									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//									Row++;
-//									
-//								}
-//								if( HasBomb(myPanelB,newGridX + Col, newGridY + Row ) == true){
-//									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
-//									QuantityOfBombsAround++;
-//								}
-//								else{
-//								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
-//								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//								myPanelB.repaint();
-//								
-//							}
-//							
-//						}
-//						
-//						
-//						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
-//						
-//						}
-//						}
-//		//If first column
-//				else if(ClickedInX == 1){
-//							 newGridX = ClickedInX;
-//							 newGridY = ClickedInY -1;
-//							for(int Col = 0;Col < 2; Col++){
-//							
-//							for(int Row = 0; Row < 3; Row++){
-//								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
-//									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//									Row++;
-//									
-//								}
-//								if( HasBomb(myPanelB,newGridX + Col, newGridY + Row ) == true){
-//									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
-//									QuantityOfBombsAround++;
-//								}
-//								else{
-//								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
-//								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//								myPanelB.repaint();
-//								
-//							}
-//							
-//						}
-//						
-//						
-//						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
-//						
-//						}
-//						}
-//		//If last column
-//				else if(ClickedInX == 9 ){
-//							 newGridX = ClickedInX - 1;
-//							 newGridY = ClickedInY - 1;
-//							for(int Col = 0;Col < 2; Col++){
-//							
-//							for(int Row = 0; Row < 3; Row++){
-//								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
-//									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//									Row++;
-//									
-//								}
-//								if( HasBomb(myPanelB,newGridX + Col, newGridY + Row ) == true){
-//									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
-//									QuantityOfBombsAround++;
-//								}
-//								else{
-//								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
-//								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//								myPanelB.repaint();
-//								
-//							}
-//							
-//						}
-//						
-//						
-//						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
-//						
-//						}
-//						}
-//		//else on grid
-//				else{
-//							 newGridX = ClickedInX - 1;
-//							 newGridY = ClickedInY - 1;
-//							for(int Col = 0;Col < 3; Col++){
-//							
-//							for(int Row = 0; Row < 3; Row++){
-//								if ((newGridX + Col == ClickedInX) && (newGridY + Row == ClickedInY)){
-//									System.out.println("Original Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//									Row++;
-//									
-//								}
-//								if( HasBomb(myPanelB,newGridX + Col, newGridY + Row ) == true){
-//									myPanelB.colorArray[newGridX + Col][newGridY + Row] = coveredCell;
-//									QuantityOfBombsAround++;
-//								}
-//								else{
-//								myPanelB.colorArray[newGridX + Col][newGridY + Row] = uncoveredCell;
-//								System.out.println("Coordinates: " + newGridX + Col + ", " + newGridY + Row);
-//								myPanelB.repaint();
-//								
-//							}
-//							
-//						}
-//						
-//						
-//						System.out.println("Bombs Around Clicked Grid: " + QuantityOfBombsAround);
-//						
-//						}
-//						}
-//}
+/**
+ * CheckColUpper: Check all grid above Clicked cell until a cell with bombs around is Reached
+ * @param myPanelB
+ * @param ClickedInX
+ * @param ClickedInY
+ *///additional bug: If click a bomb it will not painted black, instead gray. FIX
 	public void CheckColUpper(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -536,6 +316,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * CheckColDown: Check all grid under Clicked cell until a cell with bombs around is Reached
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void CheckColDown(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -549,6 +335,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * CheckRowLeft: Check all grids to the left Clicked cell until a cell with bombs around is Reached
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void CheckRowLeft(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -562,6 +354,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * CheckRowRight: Check all grids to the right Clicked cell until a cell with bombs around is Reached
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void CheckRowRight(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -575,6 +373,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * CheckDiagonalTopLeft: Check all grids to the  top-left Clicked cell until a cell with bombs around is Reached
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void CheckDiagonalTopLeft(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -589,6 +393,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * CheckDiagonalTopLeft: Check all grids to the  top-right Clicked cell until a cell with bombs around is Reached
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void CheckDiagonalTopRight(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -603,6 +413,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * CheckDiagonalBottomLeft: Check all grids to the  bottom-left Clicked cell until a cell with bombs around is Reached
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void CheckDiagonalBottomLeft(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -617,6 +433,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * CheckDiagonalBottomRight: Check all grids to the  bottom-right Clicked cell until a cell with bombs around is Reached
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void CheckDiagonalBottomRight(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		
@@ -631,6 +453,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		myPanelB.colorArray[newGridX][newGridY] = hasNumber;
 		
 		}
+	/**
+	 * Expand: will expand in ANY ways until a cell with bombs around is founded.
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void Expand(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		Color hasNumber = Color.ORANGE;
 		int newGridX = ClickedInX;
@@ -652,6 +480,12 @@ public class MyMouseAdapter extends MouseAdapter {
 		}
 		
 	}
+	/**
+	 * GameOver: if a bomb is clicked it will revealed all bombs positions and painted all.
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 */
 	public void GameOver(MyPanel myPanelB,int ClickedInX, int ClickedInY){
 		
 		if(HasBomb(myPanelB,ClickedInX,ClickedInY)){
@@ -661,6 +495,13 @@ public class MyMouseAdapter extends MouseAdapter {
 			}
 		}
 	}
+	/**
+	 * HasBomb: If Clicked Cell has a bomb
+	 * @param myPanelB
+	 * @param ClickedInX
+	 * @param ClickedInY
+	 * @return
+	 */
 	public boolean HasBomb(MyPanel myPanelB, int ClickedInX,int ClickedInY){
 		
 		hasBomb = false;
