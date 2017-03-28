@@ -21,7 +21,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	private boolean [][] empty = new boolean [10][10];
 	private boolean gameOver = false;
 	private int countCells = 0;
-
+	private boolean game = true;
 
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
@@ -188,28 +188,33 @@ public class MyMouseAdapter extends MouseAdapter {
 		}
 	}
 
-
+	/**
+	 * METHOD: Creates random positions to mines and saved them into an Array List of posX and posY
+	 * @param myPanel
+	 * @param quantityCol: Quantity of the Columns
+	 * @param quantityRow: Quantity of the Rows
+	 */
 	public void createMines(MyPanel myPanel, int quantityCol, int quantityRow){
 		if(bomb == false){
-			boolean repeat = false;
 			for(int i = 1; i <= posXBomb.length; i++){
 				do{
 					quantityCol = generator.nextInt(10);
 					quantityRow = generator.nextInt(10);
-					repeat = false;
-					for(int check = 1; check < 10; check++){
-						if(posXBomb[check-1] == quantityCol && posYBomb[check-1] == quantityRow){
-							repeat = true;
-						}
-					}
-				}while(quantityCol == 0 || quantityRow == 0 || repeat == true);
+				}while(quantityCol == 0 || quantityRow == 0 || myPanel.colorArray[quantityCol][quantityRow].equals(bombs));
 				posXBomb[i - 1] = quantityCol;
 				posYBomb[i - 1] = quantityRow;
 				bomb = true;
+				System.out.print(posXBomb[i-1] + "");
+				System.out.print(posYBomb[i-1]);
+				System.out.print(" ");
 				}
 			}
 	}
-	
+	/**
+	 * METHOD: All bombs in array List of posXBomb and posYBombs will have a representative 1 
+	 *  0 for cells without mines
+	 * @param myPanel
+	 */
 	public void markMines(MyPanel myPanel){
 		int posBomb = 0;
 		if(bomb == true){
@@ -226,7 +231,13 @@ public class MyMouseAdapter extends MouseAdapter {
 			}
 		}
 	}
-	
+	/**
+	 * METHOD: This methods will check around grids of gridX and GridY position to find bombs
+	 * IF bombs founded then countBomb++
+	 * @param myPanel
+	 * @param gridX: The gridX clicked
+	 * @param gridY: The gridY clicked
+	 */
 	public void minesAroundCells(MyPanel myPanel, int gridX, int gridY){
 		int countBomb = 0;
 		if(check == false){
@@ -307,7 +318,13 @@ public class MyMouseAdapter extends MouseAdapter {
 		}while(countCells < 10);
 		}
 	}
-	
+	/**
+	 * METHOD: Check if the position clicked is on grid or != 1.
+	 * @param myPanel
+	 * @param gridX:Clicked in X
+	 * @param gridY: Clicked in Y
+	 * @return
+	 */
 	public boolean onGrid(MyPanel myPanel, int gridX, int gridY){
 		if ((myPanel.mouseDownGridX != -1) && (myPanel.mouseDownGridY != -1)) {
 			if ((gridX != -1) && (gridY != -1)) {
@@ -318,7 +335,14 @@ public class MyMouseAdapter extends MouseAdapter {
 		} 
 		return false;
 	}
-
+	/**
+	 * METHOD: Check if the user clicked on a mine cell, if clicked on one then GameOver.
+	 * It will also ask if the user wants to play again or not
+	 * @param myPanel
+	 * @param gridX:Clicked in X
+	 * @param gridY: Clicked in Y
+	 * @param myFrame
+	 */
 	public void GameOver(MyPanel myPanel, int gridX, int gridY, JFrame myFrame){
 		if(gameOver == false){
 			if(minedCell[gridX][gridY] == 1 && myPanel.colorArray[gridX][gridY] != Color.RED){
@@ -348,6 +372,12 @@ public class MyMouseAdapter extends MouseAdapter {
 			}
 		}
 	}
+	/** 
+	 * METHOD: Check if current cell is empty
+	 * @param myPanel
+	 * @param gridX: Clicked in X
+	 * @param gridY: Clicked in Y
+	 */
 	public void emptyCells(MyPanel myPanel, int gridX, int gridY){
 		if(minesAround[gridX][gridY] == 0){
 			for(int i = -1; i < 2; i++){
@@ -402,6 +432,11 @@ public class MyMouseAdapter extends MouseAdapter {
 			}
 		}
 	}
+	/**
+	 * METHOD: This method begin if the clicked cell is empty
+	 * will expand on any directions any cells around that doesn't have mines around
+	 * @param myPanel
+	 */
 	
 	public void expandCells (MyPanel myPanel){
 		for(int check = 1; check < 10; check++){
@@ -490,7 +525,12 @@ public class MyMouseAdapter extends MouseAdapter {
 			}
 		}
 	}
-	
+	/**
+	 * METHOD: This method will detect when the user had win and no Game Over 
+	 * will ask if want to play again or not.
+	 * @param myPanel
+	 * @param myFrame
+	 */
 	public void winGame(MyPanel myPanel, JFrame myFrame){
 		int sumCount = 0;
 		for(int col = 1; col < 10; col++){
@@ -512,7 +552,7 @@ public class MyMouseAdapter extends MouseAdapter {
 				}
 			}
 			if(sumCount > 70 && gameOver == false){
-				Object[] options = {"Yes","No, thanks"};
+				Object[] options = {"Yes ","No, thanks"};
 				int selectedOption = JOptionPane.showOptionDialog(myFrame,"      Want to PLAY AGAIN??","NICE GAME! YOU WON!",JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[1]);
 				if(selectedOption == JOptionPane.NO_OPTION){
 					System.exit(0);
