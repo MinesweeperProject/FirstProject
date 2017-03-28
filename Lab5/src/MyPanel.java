@@ -16,6 +16,9 @@ public class MyPanel extends JPanel {
 	public int y = -1;
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
+	 public int [][] bombsAround = new int [10][10]; 
+	
+	 
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
@@ -66,16 +69,42 @@ public class MyPanel extends JPanel {
 		}
 
 		//Paint cell colors
-		for (int x = 0; x < TOTAL_COLUMNS; x++) {
-			for (int y = 0; y < TOTAL_ROWS; y++) {
-				if ((x == 0) || (y != TOTAL_ROWS - 1)) {
-					Color c = colorArray[x][y];
-					g.setColor(c);
-					g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
-				}
-			}
-		}
-	}
+		for (int x = 1; x < TOTAL_COLUMNS; x++) {
+			   for (int y = 1; y < TOTAL_ROWS; y++) {
+			    if ((x == 0) || (y != TOTAL_ROWS - 1)) {
+			     
+			     Color c = colorArray[x][y];
+			     g.setColor(c);
+			     g.fillRect(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 1, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 1, INNER_CELL_SIZE, INNER_CELL_SIZE);
+			     
+			     //Paint numbers using array of mines around each cell created on myMouseAdpater
+			     int minesQuantity = bombsAround[x][y];
+			     if (minesQuantity > 0){
+			      if (minesQuantity == 1) {
+			       g.setColor(Color.BLUE);
+			      }else if (minesQuantity == 2){
+			       g.setColor(Color.BLACK);
+			      }else if (minesQuantity == 3){
+			       g.setColor(Color.RED);
+			      }else if (minesQuantity == 4){
+			       g.setColor(Color.WHITE);
+			      }else if(minesQuantity == 5){
+			       g.setColor(Color.ORANGE);
+			      }else if(minesQuantity == 6){
+			       g.setColor(Color.YELLOW);
+			      }else if(minesQuantity == 7){
+			       g.setColor(Color.GREEN);
+			      }else{
+			       g.setColor(Color.PINK);
+			      }
+			      g.drawString(Integer.toString(bombsAround[x][y]), x1 + 38 + (x * (INNER_CELL_SIZE + 1)), y1 + 45 + (y * (INNER_CELL_SIZE + 1)));
+			     } 
+			    }
+			   }
+			  }
+			 }
+
+	
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();
 		int x1 = myInsets.left;
@@ -101,6 +130,9 @@ public class MyPanel extends JPanel {
 		}
 		return x;
 	}
+	//Paint cell colors
+	  
+
 	public int getGridY(int x, int y) {
 		Insets myInsets = getInsets();
 		int x1 = myInsets.left;
