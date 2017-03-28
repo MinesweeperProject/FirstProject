@@ -20,8 +20,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	private int [][] minesAround = new int [10][10];
 	private boolean [][] empty = new boolean [10][10];
 	private boolean gameOver = false;
-	private int countCells = 0;
-	private boolean game = true;
+	private int countCells = 0;	
 
 	public void mousePressed(MouseEvent e) {
 		switch (e.getButton()) {
