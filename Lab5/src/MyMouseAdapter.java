@@ -196,17 +196,21 @@ public class MyMouseAdapter extends MouseAdapter {
 	 */
 	public void createMines(MyPanel myPanel, int quantityCol, int quantityRow){
 		if(bomb == false){
+			boolean repeat = false;
 			for(int i = 1; i <= posXBomb.length; i++){
 				do{
 					quantityCol = generator.nextInt(10);
 					quantityRow = generator.nextInt(10);
-				}while(quantityCol == 0 || quantityRow == 0 || myPanel.colorArray[quantityCol][quantityRow].equals(bombs));
+					repeat = false;
+					for(int check = 1; check < 10; check++){
+						if(posXBomb[check-1] == quantityCol && posYBomb[check-1] == quantityRow){
+							repeat = true;
+						}
+					}
+				}while(quantityCol == 0 || quantityRow == 0 || repeat == true);
 				posXBomb[i - 1] = quantityCol;
 				posYBomb[i - 1] = quantityRow;
 				bomb = true;
-				System.out.print(posXBomb[i-1] + "");
-				System.out.print(posYBomb[i-1]);
-				System.out.print(" ");
 				}
 			}
 	}
