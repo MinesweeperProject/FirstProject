@@ -127,9 +127,7 @@ public class MyPanel extends JPanel {
 			return -1;
 		}
 		return x;
-	}
-	//Paint cell colors
-	  
+	} 
 
 	public int getGridY(int x, int y) {
 		Insets myInsets = getInsets();
