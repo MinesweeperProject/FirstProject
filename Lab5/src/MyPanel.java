@@ -16,9 +16,7 @@ public class MyPanel extends JPanel {
 	public int y = -1;
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
-	 public int [][] bombsAround = new int [10][10]; 
-	
-	 
+	public int [][] bombsAround = new int [10][10]; 
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
